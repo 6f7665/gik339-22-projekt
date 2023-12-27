@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+	<title>Titel</title>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE-edge" />
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<meta name="description" content="" />
+	
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="/styles/style.css" />
+	<!--<link rel="icon" href="img/favicon.png">-->
+</head>
+<body>
+<header class="header">
+	<div class="container">
+		<nav class="nav align-items-center">
+			<a href="/" class="nav-link"><h1>STUDENT BLOG</h1></a>
+			<a class="nav-link btn btn-dark btn-md" style="margin-left: auto;" href="/createpost">+ create post</a>
+		</nav>
+	</div>
+
+</header>
+<main>
+	<section class="container">
+        <form method="POST" action="/createpost">
+          <div class="mt-4 mb-3">
+            <label for="blogHeading" class="form-label">Blog title</label>
+            <input type="text" class="form-control" name="blogHeading" id="blogHeading" placeholder="Header title">
+          </div>
+          <div class="mb-3">
+            <label for="blogAuthor" class="form-label">Author</label>
+            <input type="text" class="form-control" id="blogAuthor" name="blogAuthor" placeholder="Author name">
+          </div>
+          <!-- <div class="mb-3">
+            <label for="blogImage" class="form-label">Blog heading image</label>
+            <input class="form-control" type="file" id="blogImage">
+          </div> -->
+          <div class="mb-3">
+            <label for="blogContent" class="form-label">Blog content</label>
+            <textarea class="form-control" id="blogContent" name="blogContent" rows="3"></textarea>
+          </div> 
+          <div class="col-auto">
+            <button type="submit" class="btn btn-primary mb-3">Create post</button>
+            <a class="btn btn-outline-primary mb-3">Preview post</a>
+          </div>
+         
+        </form>
+         
+		
+	</section>
+	
+</main>
+<footer class="footer">
+    <p>Created with 😤 by Projektgrupp 22</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</body>
+</html>
