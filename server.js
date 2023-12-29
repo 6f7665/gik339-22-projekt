@@ -2,6 +2,7 @@ const express = require("express");
 const sqlite3 = require('sqlite3').verbose();
 const fs = require("fs");
 const https = require("https");
+const http = require("http");
 const path = require('path');
 
 const server = express();
@@ -29,10 +30,10 @@ server.get('/', (req, res) => {
 	res.sendFile(path.join(__dirname, './index.html'));
 	
 });
-server.get('/createpost', (req, res) => {
+/*server.get('/createpost', (req, res) => {
 	res.sendFile(path.join(__dirname, './createpost.html'));
 	  });
-    
+  */ 
 server.post('/createpost', (req, res) =>{
 	// Ladda upp bild till servern
 	
@@ -75,6 +76,10 @@ server.get('/posts/:id', (req, res) =>{
 	const postId = req.params.id;
 	console.log(postId);
 });
+server.get('/deletepost/:id', (req, res) =>{
+	const postId = req.params.id;
+	console.log("delete: " + postId);
+});
 server.get('/initposts', (req, res) =>{
 	const sql = 'SELECT * FROM posts';
 	db.all(sql, (err, posts) =>{
@@ -97,6 +102,7 @@ const credentials = {
 }
 
 const httpsWrapper = https.createServer(credentials, server);
+const httpWrapper = http.createServer(server);
 
 httpsWrapper.listen(8080);
 
