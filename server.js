@@ -30,13 +30,8 @@ server.get('/', (req, res) => {
 	res.sendFile(path.join(__dirname, './index.html'));
 	
 });
-/*server.get('/createpost', (req, res) => {
-	res.sendFile(path.join(__dirname, './createpost.html'));
-	  });
-  */ 
 server.post('/createpost', (req, res) =>{
 	// Ladda upp bild till servern
-	
 
 	//Skapa ett blogginlägg.
 	const author = req.body.blogAuthor;
@@ -50,32 +45,46 @@ server.post('/createpost', (req, res) =>{
 			console.error(err);
 			res.status(500, 'Error, något gick fel').send(err);
 		}
-
 		res.redirect('/');
 	});
-	
- 
-	// req.body.blogHeading, req.body.blogAuthor, req.body.blogContent;
-
-
-
 });
+//this gets all posts and returns it 
 server.get('/posts', (req, res) =>{
 	const sql = 'SELECT * FROM posts ORDER BY creation_date DESC';
 	db.all(sql, (err, posts) =>{
 		if(err){
 			console.error(err);
 			res.status(500).send('Server Error');
-		} else{
+		//should it be an else here?
 			res.send(posts);
 		}
 	});
 });
-
+//this does nothing
 server.get('/posts/:id', (req, res) =>{
 	const postId = req.params.id;
 	console.log(postId);
 });
+//this updates posts based on id
+server.post('/updatepost/:id', (req, res) =>{
+	const postId = req.params.id;
+	console.log("update:" + postId);
+
+	const author = req.body.blogAuthor;
+	const heading = req.body.blogHeading;
+	const content = req.body.blogContent;
+	const image_source = 'https://placehold.jp/256x256.png';
+
+	const sql = `UPDATE posts SET title='${heading}', author='${author}', image_src=${image_source}, content='${content}', creation_date=CURRENT_TIMESTAMP, WHERE id='${postId}'`;
+	db.run(sql, (err) => {
+		if(err) {
+			console.error(err);
+			res.status(500, 'Error, något gick fel').send(err);
+		}
+		res.redirect('/');
+	});
+});
+//this deletes post based on id
 server.get('/deletepost/:id', (req, res) =>{
 	const postId = req.params.id;
 	console.log("delete: " + postId);
