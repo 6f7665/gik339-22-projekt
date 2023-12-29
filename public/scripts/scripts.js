@@ -28,6 +28,7 @@ function fetchData(){
                         <h5 class="card-title">${post.title}</h5>
                         <p class="card-text">${shortenString}</p>
                         <a href="/posts/${post.id}" class="btn btn-primary">Read more</a>
+                        <a href="/deletepost/${post.id}" class="btn btn-primary">Delete &#128465</a>
                         </div>
                     </div>
                 </div>

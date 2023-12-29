@@ -79,6 +79,15 @@ server.get('/posts/:id', (req, res) =>{
 server.get('/deletepost/:id', (req, res) =>{
 	const postId = req.params.id;
 	console.log("delete: " + postId);
+	const sql = `DELETE FROM posts WHERE id='${postId}'`;
+	db.run(sql, (err) => {
+		if(err) {
+			console.error(err);
+			res.status(500, 'Error, något gick fel').send(err);
+		}
+
+		res.redirect('/');
+	});
 });
 server.get('/initposts', (req, res) =>{
 	const sql = 'SELECT * FROM posts';
