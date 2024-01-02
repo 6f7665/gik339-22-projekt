@@ -5,6 +5,11 @@ const url = 'https://localhost:8080/posts';
 
 window.addEventListener('load', fetchData);
 
+function editPost(id){
+	const post = document.getElementById(id);
+	console.log(id);
+}
+
 function fetchData(){
     fetch(url)
     .then((result) => result.json())
@@ -22,13 +27,14 @@ function fetchData(){
     
                 const html = `
                 <div class="col">
-                    <div class="card">
+                    <div class="card" id="post_${post.id}">
                         <img src="${post.image_src}" class="card-img-top" alt="blog header image">
                         <div class="card-body">
                         <h5 class="card-title">${post.title}</h5>
                         <p class="card-text">${shortenString}</p>
                         <a href="/posts/${post.id}" class="btn btn-primary">Read more</a>
                         <a href="/deletepost/${post.id}" class="btn btn-primary">Delete &#128465</a>
+                        <a href="#" onclick="editPost(post_${post.id})" class="btn btn-primary">Edit</a>
                         </div>
                     </div>
                 </div>
