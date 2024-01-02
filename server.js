@@ -55,6 +55,7 @@ server.get('/posts', (req, res) =>{
 		if(err){
 			console.error(err);
 			res.status(500).send('Server Error');
+		}else{
 		//should it be an else here?
 			res.send(posts);
 		}
