@@ -5,7 +5,16 @@ const url = 'https://localhost:8080/posts';
 
 window.addEventListener('load', fetchData);
 
-//-----	den här funktionen låter användaren redigera poster
+//----- this shows and hides create post form
+function showCreatePostForm(){
+	const item = document.getElementById("CreatePostFormSection");
+	item.classList.remove("d-none");
+}
+function hideCreatePostForm(){
+	document.getElementById("CreatePostFormSection").classList.add("d-none");
+}
+
+//-----	this shows and hides post edit form
 function editPost(id){
 	const Post = document.getElementById(id);
 	const PostContent = document.getElementById(id).getElementsByClassName("card-text")[0].textContent;

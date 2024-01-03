@@ -92,12 +92,12 @@
 				</defs>
 			</svg>
 			<a href="/" class="nav-link"><h1>STUDENT BLOG</h1></a>
-			<a class="nav-link btn btn-dark btn-md" style="margin-left: auto;" href="/createpost">+ create post</a>
+			<a class="nav-link btn btn-dark btn-md" style="margin-left: auto;" href="#CreatePostFormSection" onclick="showCreatePostForm()">+ create post</a>
 		</nav>
 	</div>
 </header>
 <main>
-	<section class="container">
+	<section class="container d-none" id="CreatePostFormSection">
         <form method="POST" action="/createpost" id="CreatePostForm">
           <div class="mt-4 mb-3">
             <label for="blogHeading" class="form-label">Blog title</label>
@@ -117,7 +117,7 @@
           </div> 
           <div class="col-auto">
             <button type="submit" class="btn btn-primary mb-3">Create post</button>
-            <a class="btn btn-outline-primary mb-3">Preview post</a>
+            <a class="btn btn-outline-primary mb-3" href="#" onclick="hideCreatePostForm()">Cancel</a>
           </div>
          
         </form>
