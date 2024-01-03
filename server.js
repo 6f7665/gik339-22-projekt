@@ -75,9 +75,17 @@ server.post('/updatepost/:id', (req, res) =>{
 	const heading = req.body.blogHeading;
 	const content = req.body.blogContent;
 	const image_source = 'https://placehold.jp/256x256.png';
+	
+	console.log(author);
+	console.log(heading);
+	console.log(content);
+	console.log(image_source);
 
-	const sql = `UPDATE posts SET title='${heading}', author='${author}', image_src=${image_source}, content='${content}', creation_date=CURRENT_TIMESTAMP, WHERE id='${postId}'`;
-	db.run(sql, (err) => {
+	const InputData = [heading, author, content, image_source, postId];
+
+	const sql = "UPDATE posts SET title=?, author=?, content=?, image_src=? WHERE id=?";
+	//const sql = `UPDATE posts SET title='${heading}', author='${author}', image_src=${image_source}, content='${content}', creation_date=CURRENT_TIMESTAMP, WHERE id='${postId}'`;
+	db.run(sql, InputData,function(err){
 		if(err) {
 			console.error(err);
 			res.status(500, 'Error, något gick fel').send(err);
