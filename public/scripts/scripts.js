@@ -45,6 +45,42 @@ function createPost(){
 
 }
 function updatePost(id){
+  console.log(id);
+  event.preventDefault();
+  const updateForm = document.getElementById(`EditPost${id}Form`);
+  const Name = updateForm.elements['blogAuthor'].value;
+  const Heading = updateForm.elements['blogHeading'].value;
+  const Content = updateForm.elements['blogContent'].value;
+
+  console.log(Name + Heading + Content);
+
+  fetch(`/updatepost/${id}`, {
+    method: 'PUT',
+    headers: {
+        'Content-Type': 'application/json', // Also, corrected the typo in 'application/json'
+    },
+    body: JSON.stringify({
+        blogAuthor: Name,
+        blogHeading: Heading,
+        blogContent: Content,
+    })
+})
+  .then(response => response.json())
+  .then(data => {
+      if(data.error){
+          console.error(data.error);
+          displayAlert(data.error, 'danger');
+      } else {
+          console.log(data.message);
+          displayAlert('Post edited successfully', 'success');
+          fetchData();
+      }
+  })
+  .catch(error => {
+      console.error('Error', error);
+      displayAlert(error, 'danger');
+  });
+  
 
 }
 function deletePost(id){
@@ -57,6 +93,7 @@ function deletePost(id){
   .then(data =>{
     if(data.error){
       console.error(data.error);
+      displayAlert(data.error, 'danger');
     }else{
       console.log(data.message);
       displayAlert('Post removed successfully', 'success');
@@ -65,6 +102,7 @@ function deletePost(id){
   })
   .catch(error =>{
     console.error('Error', error);
+    displayAlert(error, 'danger');
   });
 
 
@@ -81,7 +119,7 @@ function displayAlert(message, type){
 
   const alertHtml = `
    <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
-            ${message}
+            <strong>Holymoly, </strong>${message}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
   `;
@@ -93,13 +131,14 @@ function displayAlert(message, type){
 
 
 //-----	this shows and hides post edit form
-function editPost(id){
+function showEditPostForm(id){
 	const Post = document.getElementById(id);
 	const PostContent = document.getElementById(id).getElementsByClassName("card-text")[0].textContent;
 	const PostHeading = document.getElementById(id).getElementsByClassName("card-title")[0].textContent;
-	const html = `
+  console.log(`id för post du redigerar:${id}`);
+  const html = `
 	<section class="container">
-        <form method="POST" action="/updatepost/${id}" id="EditPost${id}Form">
+        <form id="EditPost${id}Form">
           <div class="mt-4 mb-3">
             <label for="blogHeading${id}" class="form-label">Blog title</label>
             <input type="text" class="form-control" name="blogHeading" id="blogHeading${id}" placeholder="Header title" value="${PostHeading}"></input
@@ -117,15 +156,20 @@ function editPost(id){
             <textarea class="form-control" id="blogContent${id}" name="blogContent" rows="3">${PostContent}</textarea>
           </div> 
           <div class="col-auto">
-            <button type="submit" class="btn btn-primary mb-3">Submit</button>
-            <a href="/" class="btn btn-outline-primary mb-3">Cancel</a>
+            <button onclick="updatePost(${id})" type="submit" class="btn btn-primary mb-3">Submit</button>
+            <button onclick="hideEditPostForm(${id})" class="btn btn-outline-primary mb-3">Cancel</button>
           </div>
         </form>
 	</section>
 	`;
+
 	Post.innerHTML = html;
 	console.log(id);
 	console.log(Post);
+}
+function hideEditPostForm(id)
+{
+  //dölj editpostformuläret här //vg fixa
 }
 
 function fetchData(){
@@ -143,7 +187,7 @@ function fetchData(){
                         <p class="card-desc">Written by: <span>${post.author}</span> on ${post.creation_date}</p>
                         <p class="card-text">${post.content}</p>
                         <button onclick="deletePost(${post.id})" class="btn btn-danger">Delete &#128465</button>
-                        <button onclick="editPost(${post.id})" class="btn btn-warning">Edit</button>
+                        <button onclick="showEditPostForm(${post.id})" class="btn btn-warning">Edit</button>
                         </div>
                     </div>
             `
