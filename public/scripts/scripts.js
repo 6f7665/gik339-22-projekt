@@ -1,5 +1,3 @@
-console.log('Hej jag funkar');
-
 const postContainer = document.getElementById('postContainer');
 const url = 'https://localhost:8080/posts';
 
@@ -13,6 +11,86 @@ function showCreatePostForm(){
 function hideCreatePostForm(){
 	document.getElementById("CreatePostFormSection").classList.add("d-none");
 }
+
+//----- functions to call api
+function createPost(){
+  const form = document.getElementById('CreatePostForm');
+  const Name = document.getElementById("blogAuthor").value;
+  const Heading = document.getElementById("blogHeading").value;
+  const Content = document.getElementById("blogContent").value;
+  console.log("jag körs" + Name + Heading + Content);
+  fetch("/createpost", {
+    method: "POST",
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      blogAuthor: Name,
+      blogHeading: Heading,
+      blogContent: Content,
+    })
+  })
+  .then(response => response.json())
+    .then(data =>{
+      if(data.error){
+        displayAlert(data.error, 'danger');
+      }else{
+        displayAlert('Post created successfully', 'success');
+        fetchData();
+        form.reset();
+        hideCreatePostForm();
+      }
+    })
+  .catch(error =>{
+    displayAlert(error, 'danger');
+  })
+
+}
+function updatePost(id){
+
+}
+function deletePost(id){
+  console.log("deleting post: " + id);
+
+  fetch(`/deletepost/${id}`,{
+    method: 'DELETE',
+  })
+  .then(response => response.json())
+  .then(data =>{
+    if(data.error){
+      console.error(data.error);
+    }else{
+      console.log(data.message);
+      displayAlert('Post removed successfully', 'success');
+      fetchData();
+    }
+  })
+  .catch(error =>{
+    console.error('Error', error);
+  });
+
+
+}
+
+document.getElementById('CreatePostForm').addEventListener('submit', function(event){
+  event.preventDefault();
+  createPost();
+});
+
+function displayAlert(message, type){
+  const alertContainer = document.getElementById('alertContainer');
+  const alertClass = type === 'danger' ? 'alert-danger' : 'alert-success';
+
+  const alertHtml = `
+   <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+  `;
+
+
+  alertContainer.innerHTML = alertHtml;
+
+}
+
 
 //-----	this shows and hides post edit form
 function editPost(id){
@@ -47,31 +125,27 @@ function editPost(id){
 	`;
 	Post.innerHTML = html;
 	console.log(id);
-	console.log(post);
+	console.log(Post);
 }
 
 function fetchData(){
+    postContainer.innerHTML = "";
     fetch(url)
     .then((result) => result.json())
     .then((posts) =>{
         if (posts.length > 0){
-            console.log(posts);
-            console.log(posts);
             posts.forEach((post) =>{
-                const shortenString = post.content.slice(0, 200); //Förkorta denna sträng till färre tecken.
+                //const shortenString = post.content.slice(0, 200); //Förkorta denna sträng till färre tecken.
                 const html = `
-                <div class="col">
-                    <div class="card" id="${post.id}">
-                        <img src="${post.image_src}" class="card-img-top" alt="blog header image">
+                    <div class="card mb-4" id="${post.id}">
                         <div class="card-body">
                         <h5 class="card-title">${post.title}</h5>
-                        <p class="card-text">${shortenString}<span>...</span></p>
-                        <!--<a href="/posts/${post.id}" class="btn btn-primary">Read more</a>-->
-                        <a href="/deletepost/${post.id}" class="btn btn-primary">Delete &#128465</a>
-                        <a href="#" onclick="editPost(${post.id})" class="btn btn-primary">Edit</a>
+                        <p class="card-desc">Written by: <span>${post.author}</span> on ${post.creation_date}</p>
+                        <p class="card-text">${post.content}</p>
+                        <button onclick="deletePost(${post.id})" class="btn btn-danger">Delete &#128465</button>
+                        <button onclick="editPost(${post.id})" class="btn btn-warning">Edit</button>
                         </div>
                     </div>
-                </div>
             `
             postContainer.innerHTML += html;
             });

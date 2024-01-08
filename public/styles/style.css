@@ -24,6 +24,13 @@ body{
 .nav h1{
     margin: 0;
 }
+.card-desc{
+    font-size: .8rem;
+    color: #646464;
+}
+.alert-container > div{
+    margin-block: 1rem;
+}
 .footer {
     margin-top: auto;
     background: rgb(0,18,45);

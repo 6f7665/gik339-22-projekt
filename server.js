@@ -39,13 +39,16 @@ server.post('/createpost', (req, res) =>{
 	const content = req.body.blogContent;
 	const image_source = 'https://placehold.jp/256x256.png';
 
+	console.log(author + heading + content);
+
 	const sql = 'INSERT INTO posts (title, author, image_src, content, creation_date) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)';
 	db.run(sql, [heading, author, image_source, content], (err) => {
 		if(err) {
 			console.error(err);
 			res.status(500, 'Error, något gick fel').send(err);
+		}else{
+			res.status(200).json({message: 'You have successfully created a post.'})
 		}
-		res.redirect('/');
 	});
 });
 //this gets all posts and returns it 
@@ -60,11 +63,6 @@ server.get('/posts', (req, res) =>{
 			res.send(posts);
 		}
 	});
-});
-//this does nothing
-server.get('/posts/:id', (req, res) =>{
-	const postId = req.params.id;
-	console.log(postId);
 });
 //this updates posts based on id
 server.post('/updatepost/:id', (req, res) =>{
@@ -90,7 +88,7 @@ server.post('/updatepost/:id', (req, res) =>{
 			console.error(err);
 			res.status(500, 'Error, något gick fel').send(err);
 		}
-		res.redirect('/');
+		
 	});
 });
 //this deletes post based on id
@@ -103,10 +101,24 @@ server.get('/deletepost/:id', (req, res) =>{
 			console.error(err);
 			res.status(500, 'Error, något gick fel').send(err);
 		}
-
-		res.redirect('/');
+		//res.redirect('/');
 	});
 });
+
+server.delete('/deletepost/:id', (req, res) =>{
+	const postId = req.params.id;
+
+	const sql = 'DELETE FROM posts WHERE id= ?';
+
+	db.run(sql, postId, (err) =>{
+		if(err){
+			console.log(err.message);
+			res.status(500).json({error: 'Inernal server error'});
+		}else{
+			res.status(200).json({message: 'Post deleted succesffulyy'});
+		}
+	})
+})
 server.get('/initposts', (req, res) =>{
 	const sql = 'SELECT * FROM posts';
 	db.all(sql, (err, posts) =>{
