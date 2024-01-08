@@ -92,7 +92,7 @@
 				</defs>
 			</svg>
 			<a href="/" class="nav-link"><h1>STUDENT BLOG</h1></a>
-			<a class="nav-link btn btn-dark btn-md" style="margin-left: auto;" href="#CreatePostFormSection" onclick="showCreatePostForm()">+ create post</a>
+			<button id="createPostBtn" class="nav-link btn btn-dark btn-md" style="margin-left: auto;">+ create post</a>
 		</nav>
 	</div>
 </header>
@@ -111,20 +111,20 @@
 			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 		</div> -->
 	</section>
-	<section class="container d-none" id="CreatePostFormSection">
+	<section class="container hide" id="CreatePostFormSection">
         <form id="CreatePostForm">
           <div class="mt-4 mb-3">
             <label for="blogHeading" class="form-label">Blog title</label>
-            <input type="text" class="form-control" name="blogHeading" id="blogHeading" placeholder="Header title">
+            <input type="text" class="form-control" name="blogHeading" id="blogHeading" placeholder="Header title" required>
+          </div>
+		  <div class="mt-4 mb-3">
+            <label for="blogHeading" class="form-label">Title color</label>
+            <input type="color" class="form-control" name="blogColor" id="blogColor">
           </div>
           <div class="mb-3">
             <label for="blogAuthor" class="form-label">Author</label>
             <input type="text" class="form-control" id="blogAuthor" name="blogAuthor" placeholder="Author name">
           </div>
-          <!-- <div class="mb-3">
-            <label for="blogImage" class="form-label">Blog heading image</label>
-            <input class="form-control" type="file" id="blogImage">
-          </div> -->
           <div class="mb-3">
             <label for="blogContent" class="form-label">Blog content</label>
             <textarea class="form-control" id="blogContent" name="blogContent" rows="3"></textarea>
@@ -140,16 +140,7 @@
 	</section>
 	<section class="container mt-4 mb-4">
 		<div class="" id="postContainer">
-		<!-- 	<div class="col">
-				<div class="card">
-					<img src="https://placehold.jp/256x256.png" class="card-img-top" alt="...">
-					<div class="card-body">
-					<h5 class="card-title">This is a blog heading</h5>
-					<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-					<a href="#" class="btn btn-primary">Read more</a>
-					</div>
-				</div>
-			</div> -->
+	
 			
 			
 		</div>

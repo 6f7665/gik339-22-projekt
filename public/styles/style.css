@@ -24,6 +24,17 @@ body{
 .nav h1{
     margin: 0;
 }
+.hide{
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: opacity 300ms ease-in-out, max-height 300ms ease-in-out;
+}
+.show{
+    opacity: 1;
+    max-height: 500px;
+    transition: opacity 300ms ease-in-out, max-height 300ms ease-in-out;
+}
 .card-desc{
     font-size: .8rem;
     color: #646464;

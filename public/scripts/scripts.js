@@ -1,16 +1,25 @@
 const postContainer = document.getElementById('postContainer');
+const createPostBtn = document.getElementById('createPostBtn');
 const url = 'https://localhost:8080/posts';
 
 window.addEventListener('load', fetchData);
 
-//----- this shows and hides create post form
-function showCreatePostForm(){
-	const item = document.getElementById("CreatePostFormSection");
-	item.classList.remove("d-none");
+createPostBtn.addEventListener('click', () =>{
+   showHidePost();
+});
+function showHidePost(){
+  const postForm = document.getElementById("CreatePostFormSection");
+
+  if(postForm.classList.contains('hide')){
+    postForm.classList.remove('hide');
+    postForm.classList.add('show');
+  }else{
+    postForm.classList.remove('show');
+    postForm.classList.add('hide');
+  }
 }
-function hideCreatePostForm(){
-	document.getElementById("CreatePostFormSection").classList.add("d-none");
-}
+
+
 
 //----- functions to call api
 function createPost(){
@@ -18,6 +27,8 @@ function createPost(){
   const Name = document.getElementById("blogAuthor").value;
   const Heading = document.getElementById("blogHeading").value;
   const Content = document.getElementById("blogContent").value;
+  const Color = document.getElementById("blogColor").value;
+  console.log(Color);
   console.log("jag körs" + Name + Heading + Content);
   fetch("/createpost", {
     method: "POST",
@@ -26,6 +37,7 @@ function createPost(){
       blogAuthor: Name,
       blogHeading: Heading,
       blogContent: Content,
+      blogColor: Color,
     })
   })
   .then(response => response.json())
@@ -36,7 +48,7 @@ function createPost(){
         displayAlert('Post created successfully', 'success');
         fetchData();
         form.reset();
-        hideCreatePostForm();
+  
       }
     })
   .catch(error =>{
@@ -51,8 +63,9 @@ function updatePost(id){
   const Name = updateForm.elements['blogAuthor'].value;
   const Heading = updateForm.elements['blogHeading'].value;
   const Content = updateForm.elements['blogContent'].value;
+  const Color = updateForm.elements['blogColor'].value;
 
-  console.log(Name + Heading + Content);
+  console.log(Name + Heading + Content + Color);
 
   fetch(`/updatepost/${id}`, {
     method: 'PUT',
@@ -63,6 +76,7 @@ function updatePost(id){
         blogAuthor: Name,
         blogHeading: Heading,
         blogContent: Content,
+        blogColor: Color,
     })
 })
   .then(response => response.json())
@@ -98,6 +112,7 @@ function deletePost(id){
       console.log(data.message);
       displayAlert('Post removed successfully', 'success');
       fetchData();
+      showHidePost();
     }
   })
   .catch(error =>{
@@ -143,14 +158,14 @@ function showEditPostForm(id){
             <label for="blogHeading${id}" class="form-label">Blog title</label>
             <input type="text" class="form-control" name="blogHeading" id="blogHeading${id}" placeholder="Header title" value="${PostHeading}"></input
           </div>
+          <div class="mt-4 mb-3">
+            <label for="blogColor${id}" class="form-label">Title color</label>
+            <input type="color" class="form-control" name="blogColor" id="blogColor${id}">
+          </div>
           <div class="mb-3">
             <label for="blogAuthor${id}" class="form-label">Author</label>
             <input type="text" class="form-control" id="blogAuthor${id}" name="blogAuthor" placeholder="Author name">
           </div>
-          <!-- <div class="mb-3">
-            <label for="blogImage${id}" class="form-label">Blog heading image</label>
-            <input class="form-control" type="file" id="blogImage${id}">
-          </div> -->
           <div class="mb-3">
             <label for="blogContent${id}" class="form-label">Blog content</label>
             <textarea class="form-control" id="blogContent${id}" name="blogContent" rows="3">${PostContent}</textarea>
@@ -183,7 +198,7 @@ function fetchData(){
                 const html = `
                     <div class="card mb-4" id="${post.id}">
                         <div class="card-body">
-                        <h5 class="card-title">${post.title}</h5>
+                        <h5 class="card-title" style="color:${post.headingColor}">${post.title}</h5>
                         <p class="card-desc">Written by: <span>${post.author}</span> on ${post.creation_date}</p>
                         <p class="card-text">${post.content}</p>
                         <button onclick="deletePost(${post.id})" class="btn btn-danger">Delete &#128465</button>

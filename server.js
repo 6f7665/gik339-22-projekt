@@ -37,12 +37,12 @@ server.post('/createpost', (req, res) =>{
 	const author = req.body.blogAuthor;
 	const heading = req.body.blogHeading;
 	const content = req.body.blogContent;
-	const image_source = 'https://placehold.jp/256x256.png';
+	const headingColor = req.body.blogColor;
 
-	console.log(author + heading + content);
+	console.log(author + heading + content + headingColor);
 
-	const sql = 'INSERT INTO posts (title, author, image_src, content, creation_date) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)';
-	db.run(sql, [heading, author, image_source, content], (err) => {
+	const sql = 'INSERT INTO posts (title, author, headingColor, content, creation_date) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)';
+	db.run(sql, [heading, author, headingColor, content], (err) => {
 		if(err) {
 			console.error(err);
 			res.status(500, 'Error, något gick fel').send(err);
@@ -51,7 +51,7 @@ server.post('/createpost', (req, res) =>{
 		}
 	});
 });
-//this gets all posts and returns it 
+//this gets all posts and returns them
 server.get('/posts', (req, res) =>{
 	const sql = 'SELECT * FROM posts ORDER BY creation_date DESC';
 	db.all(sql, (err, posts) =>{
@@ -60,7 +60,7 @@ server.get('/posts', (req, res) =>{
 			res.status(500).send('Server Error');
 		}else{
 		//should it be an else here?
-			res.send(posts);
+			res.status(200).send(posts);
 		}
 	});
 });
@@ -73,25 +73,23 @@ server.put('/updatepost/:id', (req, res) =>{
 	const author = req.body.blogAuthor;
 	const heading = req.body.blogHeading;
 	const content = req.body.blogContent;
-	const image_source = 'https://placehold.jp/256x256.png';
+	const color = req.body.blogColor;
 
 
-	const InputData = [heading, author, content, image_source, postId];
+	const InputData = [heading, author, content, color, postId];
 
-	const sql = "UPDATE posts SET title=?, author=?, content=?, image_src=? WHERE id=?";
-	//const sql = `UPDATE posts SET title='${heading}', author='${author}', image_src=${image_source}, content='${content}', creation_date=CURRENT_TIMESTAMP, WHERE id='${postId}'`;
+	const sql = "UPDATE posts SET title=?, author=?, content=?, headingColor=? WHERE id=?";
+	//const sql = `UPDATE posts SET title='${heading}', author='${author}', content='${content}', creation_date=CURRENT_TIMESTAMP, WHERE id='${postId}'`;
 	db.run(sql, InputData,function(err){
 		if(err) {
 			console.error(err);
 			res.status(500).json({error: err});
 		}else{
-				res.status(200).json({message: 'Post updated successfully'});
-				
+				res.status(200).json({message: 'Post updated successfully'});		
 		}
 		
 	});
 });
-
 //this deletes post based on id
 server.delete('/deletepost/:id', (req, res) =>{
 	const postId = req.params.id;
