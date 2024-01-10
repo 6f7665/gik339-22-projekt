@@ -191,7 +191,7 @@ function displayAlert(message, type){
 // fetch and update data from db, gets called whenever a chance occurs to update the frontend.
 function fetchData(){
     postContainer.innerHTML = "";
-    const url = 'https://localhost:8080/posts';
+    const url = '/posts';
     fetch(url)
     .then((result) => result.json())
     .then((posts) =>{

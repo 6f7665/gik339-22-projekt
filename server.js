@@ -29,6 +29,8 @@ server
 
     next();
   });
+
+//Serves html file when trying to get the home route, important to use for links not to be broken.
 server.get('/', (req, res) => {
 	res.sendFile(path.join(__dirname, './index.html'));
 	
