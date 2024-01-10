@@ -4,6 +4,7 @@ const fadeContainer = document.getElementById('fadeContainer');
 const form = document.getElementById('createPostForm');
 const formHeading = document.getElementById('formHeading');
 
+window.addEventListener('load', fetchData);
 // function that converts rgb to hexadecimal
 function rgbToHex(rgb) {
   let [r, g, b] = rgb.match(/\d+/g); // Extract the numerical parts of the rgb string
@@ -22,7 +23,7 @@ postContainer.addEventListener('click', (event) => {
   }
 });
 
-window.addEventListener('load', fetchData);
+
 
 form.addEventListener('submit', (event) => {
   event.preventDefault();
@@ -120,7 +121,7 @@ function createPost(){
     .then(data => handleResponse(data));
 }
 
-// set form data when updating *REMEMBER
+// set form data when updating 
 function setFormData(id){
   console.log('id är:' + id);
   const post = document.getElementById(id);
@@ -133,7 +134,6 @@ function setFormData(id){
   form.elements['blogAuthor'].value = author.textContent;
   form.elements['blogContent'].value = postText.textContent;
   form.elements['blogColor'].value = color;
-
 }
 
 //Update post

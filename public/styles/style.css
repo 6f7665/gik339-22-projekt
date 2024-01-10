@@ -12,40 +12,7 @@ body{
     background: rgb(0,18,45);
     background: linear-gradient(90deg, rgba(0,18,45,1) 0%, rgba(42,87,130,1) 100%);
     min-height: 6rem;
-}
-
-.nav-link {
-    color: white;
-}
-
-.nav {
-    min-height: 6rem;
-}
-.nav h1{
-    margin: 0;
-}
-.card-desc{
-    font-size: .8rem;
-    color: #646464;
-}
-.alert-container > div{
-    margin-block: 1rem;
-}
-.footer {
-    margin-top: auto;
-    background: rgb(0,18,45);
-    background: linear-gradient(90deg, rgba(0,18,45,1) 0%, rgba(42,87,130,1) 100%);
-    display: grid;
-    align-items: center;
-    min-height: 6rem;
-    justify-content: center;
-    color: white;
-}
-.footer p{  
-    margin: 0;
-}
-
-.fade-container {
+}.fade-container {
     position: fixed;
     top: 0;
     left: 0;
@@ -86,6 +53,36 @@ body{
     }
 }
 
+.nav-link {
+    color: white;
+}
+
+.nav {
+    min-height: 6rem;
+}
+.nav h1{
+    margin: 0;
+}
+.card-desc{
+    font-size: .8rem;
+    color: #646464;
+}
+.alert-container > div{
+    margin-block: 1rem;
+}
+.footer {
+    margin-top: auto;
+    background: rgb(0,18,45);
+    background: linear-gradient(90deg, rgba(0,18,45,1) 0%, rgba(42,87,130,1) 100%);
+    display: grid;
+    align-items: center;
+    min-height: 6rem;
+    justify-content: center;
+    color: white;
+}
+.footer p{  
+    margin: 0;
+}
 
 
 
