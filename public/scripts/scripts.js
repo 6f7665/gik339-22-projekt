@@ -11,32 +11,7 @@ function rgbToHex(rgb) {
   return "#" + ((1 << 24) + (parseInt(r) << 16) + (parseInt(g) << 8) + parseInt(b)).toString(16).slice(1);
 }
 
-//btn listener on all posts
-postContainer.addEventListener('click', (event) => {
-  if(event.target.classList.contains('btn-danger')){
-      const postId = event.target.closest('.card').id.replace("post_", "");
-      deletePost(postId);
-  } else if(event.target.classList.contains('btn-warning')){
-      const postId = event.target.closest('.card').id;
-      setFormData(postId);
-      revealForm(true, postId);
-  }
-});
 
-
-
-form.addEventListener('submit', (event) => {
-  event.preventDefault();
-  const isEditing = form.getAttribute('data-isEditing') === 'true';
-  const postId = form.getAttribute('data-postId');
-
-  if (isEditing) {
-      updatePost(postId);
-  } else {
-      createPost();
-  }
-  closeForm();
-});
 
 //close form modal popup
 function closeForm(){
@@ -48,6 +23,7 @@ function closeForm(){
   //resets form
   form.reset();
 }
+
 // form modal slidein
 function revealForm(isEditing = false, postId = ""){
   if (isEditing) {
@@ -93,11 +69,6 @@ function revealForm(isEditing = false, postId = ""){
     });
   });
 }
-
-//btn eventlistener to reveal form when clicking on it.
-createPostBtn.addEventListener('click', () => {
-  revealForm();
-});
 
 //function to call api
 
@@ -178,11 +149,10 @@ function displayAlert(message, type){
 
   const alertHtml = `
    <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
-            <strong>Holymoly, </strong>${message}
+            <strong>Holy guacamole, </strong>${message}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
   `;
-
 
   alertContainer.innerHTML = alertHtml;
 
@@ -198,7 +168,6 @@ function fetchData(){
         if (posts.length > 0){
           let html = '';
             posts.forEach((post) =>{
-                //const shortenString = post.content.slice(0, 200); //Förkorta denna sträng till färre tecken.
                 html += `
                     <div class="card mb-4" id="post_${post.id}">
                         <div class="card-body">
@@ -218,8 +187,37 @@ function fetchData(){
         }
 
     });
-  
+
 
 }
- 
+//btn listener on all posts
+postContainer.addEventListener('click', (event) => {
+  if(event.target.classList.contains('btn-danger')){
+      const postId = event.target.closest('.card').id.replace("post_", "");
+      deletePost(postId);
+  } else if(event.target.classList.contains('btn-warning')){
+      const postId = event.target.closest('.card').id;
+      setFormData(postId);
+      revealForm(true, postId);
+  }
+});
 
+ 
+// eventlistener that changes what to run if the attribute has isEditing
+form.addEventListener('submit', (event) => {
+  event.preventDefault();
+  const isEditing = form.getAttribute('data-isEditing') === 'true';
+  const postId = form.getAttribute('data-postId');
+
+  if (isEditing) {
+      updatePost(postId);
+  } else {
+      createPost();
+  }
+  closeForm();
+});
+
+//btn eventlistener to reveal form when clicking on it.
+createPostBtn.addEventListener('click', () => {
+  revealForm();
+});
