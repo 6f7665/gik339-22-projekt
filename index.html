@@ -92,51 +92,40 @@
 				</defs>
 			</svg>
 			<a href="/" class="nav-link"><h1>STUDENT BLOG</h1></a>
-			<button id="createPostBtn" class="nav-link btn btn-dark btn-md" style="margin-left: auto;">+ create post</a>
+			<button id="createPostBtn" class="btn btn-primary btn-md" style="margin-left: auto;">+ create post</a>
 		</nav>
 	</div>
 </header>
-<main>
-	<section class="container alert-container" id="alertContainer">
-<!-- 		<div class="alert alert-danger alert-dismissible fade show" role="alert">
-			<strong>Holy guacamole!</strong> You have removed a post from the database.
-			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-		</div>
-		<div class="alert alert-success alert-dismissible fade show" role="alert">
-			<strong>Holy guacamole!</strong> You have successfully created a post.
-			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-		</div>
-		<div class="alert alert-warning alert-dismissible fade show" role="alert">
-			<strong>Holy guacamole!</strong> You have successfully edited a post.
-			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-		</div> -->
-	</section>
-	<section class="container hide" id="CreatePostFormSection">
-        <form id="CreatePostForm">
-          <div class="mt-4 mb-3">
-            <label for="blogHeading" class="form-label">Blog title</label>
+
+<div id="fadeContainer" class="fade-container">
+    <form id="createPostForm" class="slide-form">
+		<h3 id="formHeading">Creating a new post &#128512;</h3>
+        <div class="mt-4 mb-3">
+            <label for="blogHeading" class="form-label">Blog title:</label>
             <input type="text" class="form-control" name="blogHeading" id="blogHeading" placeholder="Header title" required>
           </div>
 		  <div class="mt-4 mb-3">
-            <label for="blogHeading" class="form-label">Title color</label>
+            <label for="blogHeading" class="form-label">Title color:</label>
             <input type="color" class="form-control" name="blogColor" id="blogColor">
           </div>
           <div class="mb-3">
-            <label for="blogAuthor" class="form-label">Author</label>
+            <label for="blogAuthor" class="form-label">Author:</label>
             <input type="text" class="form-control" id="blogAuthor" name="blogAuthor" placeholder="Author name">
           </div>
           <div class="mb-3">
-            <label for="blogContent" class="form-label">Blog content</label>
+            <label for="blogContent" class="form-label">Blog content:</label>
             <textarea class="form-control" id="blogContent" name="blogContent" rows="3"></textarea>
           </div> 
           <div class="col-auto">
             <button type="submit" class="btn btn-primary mb-3">Create post</button>
-            <a class="btn btn-outline-primary mb-3" href="#" onclick="hideCreatePostForm()">Cancel</a>
+			<button type="button" class="btn btn-warning mb-3" id="resetBtn">Reset form</button>
+            <button type="button" class="btn btn-danger mb-3" id="closeBtn">Close</button>
           </div>
-         
-        </form>
-         
-		
+    </form>
+</div>
+<main>
+	<section class="container alert-container" id="alertContainer">
+		<!--Alerts will show up here.-->
 	</section>
 	<section class="container mt-4 mb-4">
 		<div class="" id="postContainer">

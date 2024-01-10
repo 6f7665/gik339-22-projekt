@@ -1,133 +1,167 @@
 const postContainer = document.getElementById('postContainer');
 const createPostBtn = document.getElementById('createPostBtn');
-const url = 'https://localhost:8080/posts';
+const fadeContainer = document.getElementById('fadeContainer');
+const form = document.getElementById('createPostForm');
+const formHeading = document.getElementById('formHeading');
+
+
+//btn listener on all posts
+postContainer.addEventListener('click', (event) => {
+  if(event.target.classList.contains('btn-danger')){
+      const postId = event.target.closest('.card').id.replace("post_", "");
+      deletePost(postId);
+  } else if(event.target.classList.contains('btn-warning')){
+      const postId = event.target.closest('.card').id;
+      setFormData(postId);
+      revealForm(true, postId);
+  }
+});
 
 window.addEventListener('load', fetchData);
 
-createPostBtn.addEventListener('click', () =>{
-   showHidePost();
-});
-function showHidePost(){
-  const postForm = document.getElementById("CreatePostFormSection");
-
-  if(postForm.classList.contains('hide')){
-    postForm.classList.remove('hide');
-    postForm.classList.add('show');
-  }else{
-    postForm.classList.remove('show');
-    postForm.classList.add('hide');
-  }
-}
-
-
-
-//----- functions to call api
-function createPost(){
-  const form = document.getElementById('CreatePostForm');
-  const Name = document.getElementById("blogAuthor").value;
-  const Heading = document.getElementById("blogHeading").value;
-  const Content = document.getElementById("blogContent").value;
-  const Color = document.getElementById("blogColor").value;
-  console.log(Color);
-  console.log("jag körs" + Name + Heading + Content);
-  fetch("/createpost", {
-    method: "POST",
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({
-      blogAuthor: Name,
-      blogHeading: Heading,
-      blogContent: Content,
-      blogColor: Color,
-    })
-  })
-  .then(response => response.json())
-    .then(data =>{
-      if(data.error){
-        displayAlert(data.error, 'danger');
-      }else{
-        displayAlert('Post created successfully', 'success');
-        fetchData();
-        form.reset();
-  
-      }
-    })
-  .catch(error =>{
-    displayAlert(error, 'danger');
-  })
-
-}
-function updatePost(id){
-  console.log(id);
+form.addEventListener('submit', (event) => {
   event.preventDefault();
-  const updateForm = document.getElementById(`EditPost${id}Form`);
-  const Name = updateForm.elements['blogAuthor'].value;
-  const Heading = updateForm.elements['blogHeading'].value;
-  const Content = updateForm.elements['blogContent'].value;
-  const Color = updateForm.elements['blogColor'].value;
+  const isEditing = form.getAttribute('data-isEditing') === 'true';
+  const postId = form.getAttribute('data-postId');
 
-  console.log(Name + Heading + Content + Color);
+  if (isEditing) {
+      updatePost(postId);
+  } else {
+      createPost();
+  }
+  closeForm();
+});
 
-  fetch(`/updatepost/${id}`, {
-    method: 'PUT',
-    headers: {
-        'Content-Type': 'application/json', // Also, corrected the typo in 'application/json'
-    },
-    body: JSON.stringify({
-        blogAuthor: Name,
-        blogHeading: Heading,
-        blogContent: Content,
-        blogColor: Color,
-    })
-})
-  .then(response => response.json())
-  .then(data => {
-      if(data.error){
-          console.error(data.error);
-          displayAlert(data.error, 'danger');
-      } else {
-          console.log(data.message);
-          displayAlert('Post edited successfully', 'success');
-          fetchData();
-      }
-  })
-  .catch(error => {
-      console.error('Error', error);
-      displayAlert(error, 'danger');
-  });
-  
-
+//close form modal popup
+function closeForm(){
+  fadeContainer.style.opacity = 0;
+  fadeContainer.style.visibility = 'hidden';
+  form.classList.remove('slide-in-animation');
+  form.reset();
 }
-function deletePost(id){
-  console.log("deleting post: " + id);
+// form modal slidein
+function revealForm(isEditing = false, postId = ""){
+  if (isEditing) {
+    form.setAttribute('data-isEditing', 'true');
+    form.setAttribute('data-postId', postId.replace("post_", ""));
+    formHeading.textContent = `Updating post with an id of: ${postId.replace("post_", "")} 👏🤩`;
+    form.querySelector('.btn-primary').textContent = "Update post";
+} else {
+    form.setAttribute('data-isEditing', 'false');
+    form.setAttribute('data-postId', '');
+    formHeading.textContent = `Create a new post 🫶🏼🌼🖍️`;
+    form.querySelector('.btn-primary').textContent = "Create post";
+}
+  fadeContainer.classList.add('active');
 
-  fetch(`/deletepost/${id}`,{
-    method: 'DELETE',
+  fadeContainer.style.opacity = 1;
+  fadeContainer.style.visibility = 'visible';
+
+  form.classList.add('slide-in-animation');
+  const formBtns = form.querySelectorAll('.btn');
+
+
+  
+  // close triggers
+  fadeContainer.addEventListener('click', (event) =>{
+    if (event.target === fadeContainer){
+      closeForm();
+    }
+  });
+  document.addEventListener('keydown', (event) =>{
+    if (event.key === 'Escape'){
+      closeForm();
+    }
+  });
+  formBtns.forEach((button) =>{
+    button.addEventListener('click', (event) =>{
+      if(event.target.id === 'closeBtn'){
+        closeForm();
+      
+      }else if(event.target.id === 'resetBtn'){
+        //reset form trigger
+        form.reset();
+      }
+    });
+  });
+}
+
+
+createPostBtn.addEventListener('click', () => {
+  revealForm();
+});
+
+//function to call api
+
+function fetchRequest(method, url, body){
+  return fetch(url, {
+    method: method,
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(body)
   })
   .then(response => response.json())
-  .then(data =>{
-    if(data.error){
-      console.error(data.error);
-      displayAlert(data.error, 'danger');
-    }else{
-      console.log(data.message);
-      displayAlert('Post removed successfully', 'success');
-      fetchData();
-      showHidePost();
-    }
-  })
   .catch(error =>{
     console.error('Error', error);
     displayAlert(error, 'danger');
   });
+}
 
+// function to create post
+function createPost(){
+  const formData = getFormData(form);
+  fetchRequest('POST', '/createpost', formData)
+    .then(data => handleResponse(data));
+}
+
+// set form data when updating *REMEMBER
+function setFormData(id){
+  console.log('id är:' + id);
+  const post = document.getElementById(id);
+  const title = post.querySelector('.card-title');
+  const author = post.querySelector('.post-author');
+  const postText = post.querySelector('.card-text');
+  form.elements['blogHeading'].value = title.textContent;
+  form.elements['blogAuthor'].value = author.textContent;
+  form.elements['blogContent'].value = postText.textContent;
 
 }
 
-document.getElementById('CreatePostForm').addEventListener('submit', function(event){
-  event.preventDefault();
-  createPost();
-});
+//Update post
+function updatePost(id){
+  const formData = getFormData(form);
+  fetchRequest('PUT', `/updatepost/${id}`, formData)
+    .then(data => handleResponse(data));
+  
+}
+// delete post
+function deletePost(id){
+  fetchRequest('DELETE', `/deletepost/${id}`, body = {})
+    .then(data => handleResponse(data));
 
+  form.reset();
+}
+
+// function to get data from form
+function getFormData(form){
+  return{
+    blogAuthor: form.elements['blogAuthor'].value,
+    blogHeading: form.elements['blogHeading'].value,
+    blogContent: form.elements['blogContent'].value,
+    blogColor: form.elements['blogColor'].value
+  }
+}
+
+// handle the respone data from the server
+function handleResponse(data){
+  if(data.error){
+    displayAlert(data.error, data.type);
+  }else{
+    displayAlert(data.message, data.type);
+    fetchData();
+  }
+}
+
+// function to create alerts depending on message
 function displayAlert(message, type){
   const alertContainer = document.getElementById('alertContainer');
   const alertClass = type === 'danger' ? 'alert-danger' : 'alert-success';
@@ -145,69 +179,39 @@ function displayAlert(message, type){
 }
 
 
-//-----	this shows and hides post edit form
-function showEditPostForm(id){
-	const Post = document.getElementById(id);
-	const PostContent = document.getElementById(id).getElementsByClassName("card-text")[0].textContent;
-	const PostHeading = document.getElementById(id).getElementsByClassName("card-title")[0].textContent;
-  console.log(`id för post du redigerar:${id}`);
-  const html = `
-	<section class="container">
-        <form id="EditPost${id}Form">
-          <div class="mt-4 mb-3">
-            <label for="blogHeading${id}" class="form-label">Blog title</label>
-            <input type="text" class="form-control" name="blogHeading" id="blogHeading${id}" placeholder="Header title" value="${PostHeading}"></input
-          </div>
-          <div class="mt-4 mb-3">
-            <label for="blogColor${id}" class="form-label">Title color</label>
-            <input type="color" class="form-control" name="blogColor" id="blogColor${id}">
-          </div>
-          <div class="mb-3">
-            <label for="blogAuthor${id}" class="form-label">Author</label>
-            <input type="text" class="form-control" id="blogAuthor${id}" name="blogAuthor" placeholder="Author name">
-          </div>
-          <div class="mb-3">
-            <label for="blogContent${id}" class="form-label">Blog content</label>
-            <textarea class="form-control" id="blogContent${id}" name="blogContent" rows="3">${PostContent}</textarea>
-          </div> 
-          <div class="col-auto">
-            <button onclick="updatePost(${id})" type="submit" class="btn btn-primary mb-3">Submit</button>
-            <button onclick="hideEditPostForm(${id})" class="btn btn-outline-primary mb-3">Cancel</button>
-          </div>
-        </form>
-	</section>
-	`;
-
-	Post.innerHTML = html;
-	console.log(id);
-	console.log(Post);
-}
-function hideEditPostForm(id)
-{
-  //dölj editpostformuläret här //vg fixa
-}
-
+// fetch and update data from db
 function fetchData(){
     postContainer.innerHTML = "";
+    const url = 'https://localhost:8080/posts';
     fetch(url)
     .then((result) => result.json())
     .then((posts) =>{
         if (posts.length > 0){
+          let html = '';
             posts.forEach((post) =>{
                 //const shortenString = post.content.slice(0, 200); //Förkorta denna sträng till färre tecken.
-                const html = `
-                    <div class="card mb-4" id="${post.id}">
+                html += `
+                    <div class="card mb-4" id="post_${post.id}">
                         <div class="card-body">
                         <h5 class="card-title" style="color:${post.headingColor}">${post.title}</h5>
-                        <p class="card-desc">Written by: <span>${post.author}</span> on ${post.creation_date}</p>
+                        <p class="card-desc">Written by: <span class="post-author">${post.author}</span> on ${post.creation_date}</p>
                         <p class="card-text">${post.content}</p>
-                        <button onclick="deletePost(${post.id})" class="btn btn-danger">Delete &#128465</button>
-                        <button onclick="showEditPostForm(${post.id})" class="btn btn-warning">Edit</button>
+                        <button type="button" class="btn btn-danger" aria-label="Delete post ${post.id}">Delete &#128465</button>
+                        <button type="button" class="btn btn-warning" aria-label="Edit post ${post.id}">Edit🖍️</button>
                         </div>
                     </div>
             `
-            postContainer.innerHTML += html;
+            
             });
+            postContainer.innerHTML += html;
+
+          
         }
+
     });
+   
+
+
 }
+ 
+

@@ -24,17 +24,6 @@ body{
 .nav h1{
     margin: 0;
 }
-.hide{
-    opacity: 0;
-    max-height: 0;
-    overflow: hidden;
-    transition: opacity 300ms ease-in-out, max-height 300ms ease-in-out;
-}
-.show{
-    opacity: 1;
-    max-height: 500px;
-    transition: opacity 300ms ease-in-out, max-height 300ms ease-in-out;
-}
 .card-desc{
     font-size: .8rem;
     color: #646464;
@@ -54,6 +43,47 @@ body{
 }
 .footer p{  
     margin: 0;
+}
+
+.fade-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s, visibility 0.5s;
+    z-index: 3;
+}
+
+.slide-form {
+    --formWidth: 90%;
+    position: fixed;
+    min-width: var(--formWidth);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 2rem;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    transition: right 0.5s;
+}
+
+.slide-in-animation{
+    animation: slideIn 500ms ease-out;
+}
+@keyframes slideIn {
+    0%{
+        transform: translate(150%, -50%);
+    }
+    80%{
+        transform: translate(-53%, -50%);
+    }
+    100%{
+        transform: translate(-50%, -50%);
+    }
 }
 
 

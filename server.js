@@ -6,9 +6,12 @@ const http = require("http");
 const path = require('path');
 
 const server = express();
+const port = 8080;
 const db = new sqlite3.Database('blog.db');
 
+//Our own imported package to initalize some posts into the database.
 const initalizeStartPosts = require('./initDB.js');
+
 //settings
 const Settings = {
 	sslKey: "ssl/privkey.pem",
@@ -45,9 +48,9 @@ server.post('/createpost', (req, res) =>{
 	db.run(sql, [heading, author, headingColor, content], (err) => {
 		if(err) {
 			console.error(err);
-			res.status(500, 'Error, något gick fel').send(err);
+			res.status(500).json({message: 'Internal server error', type: 'danger'});
 		}else{
-			res.status(200).json({message: 'You have successfully created a post.'})
+			res.status(200).json({message: 'You have successfully created a post.', type: 'success'});
 		}
 	});
 });
@@ -57,7 +60,7 @@ server.get('/posts', (req, res) =>{
 	db.all(sql, (err, posts) =>{
 		if(err){
 			console.error(err);
-			res.status(500).send('Server Error');
+			res.status(500).json({message: 'Internal server error', type: 'danger'});
 		}else{
 		//should it be an else here?
 			res.status(200).send(posts);
@@ -66,7 +69,6 @@ server.get('/posts', (req, res) =>{
 });
 //this updates posts based on id
 server.put('/updatepost/:id', (req, res) =>{
-	console.log("hej");
 	const postId = req.params.id;
 	console.log("update:" + postId);
 
@@ -83,9 +85,9 @@ server.put('/updatepost/:id', (req, res) =>{
 	db.run(sql, InputData,function(err){
 		if(err) {
 			console.error(err);
-			res.status(500).json({error: err});
+			res.status(500).json({message: 'Internal server error', type: 'danger'});
 		}else{
-				res.status(200).json({message: 'Post updated successfully'});		
+				res.status(200).json({message: 'Your post has been updated successfully', type: 'success'});		
 		}
 		
 	});
@@ -99,9 +101,9 @@ server.delete('/deletepost/:id', (req, res) =>{
 	db.run(sql, postId, (err) =>{
 		if(err){
 			console.log(err.message);
-			res.status(500).json({error: 'Inernal server error'});
+			res.status(500).json({message: 'Internal server error', type: 'danger'});
 		}else{
-			res.status(200).json({message: 'Post deleted successfully'});
+			res.status(200).json({message: 'Your post has been deleted successfully 🙀.', type: 'success'});
 		}
 	})
 })
@@ -127,7 +129,10 @@ const credentials = {
 }
 
 const httpsWrapper = https.createServer(credentials, server);
-const httpWrapper = http.createServer(server);
+const httpWrapper = http.createServer(server); 
 
-httpsWrapper.listen(8080);
+
+httpsWrapper.listen(port, () =>{
+	console.log(`Server is up and running on port: ${port}`);
+});
 
