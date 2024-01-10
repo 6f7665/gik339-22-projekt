@@ -33,9 +33,21 @@ server.get('/', (req, res) => {
 	res.sendFile(path.join(__dirname, './index.html'));
 	
 });
+//get request that returns posts from db
+server.get('/posts', (req, res) =>{
+	const sql = 'SELECT * FROM posts ORDER BY creation_date DESC';
+	db.all(sql, (err, posts) =>{
+		if(err){
+			console.error(err);
+			res.status(500).json({message: 'Internal server error', type: 'danger'});
+		}else{
+			res.status(200).send(posts);
+		}
+	});
+});
+// post request to create a post and insert into the db.
 server.post('/posts', (req, res) =>{
 
-	//Skapa ett blogginlägg.
 	const author = req.body.blogAuthor;
 	const heading = req.body.blogHeading;
 	const content = req.body.blogContent;
@@ -50,19 +62,6 @@ server.post('/posts', (req, res) =>{
 			res.status(500).json({message: 'Internal server error', type: 'danger'});
 		}else{
 			res.status(200).json({message: 'You have successfully created a post.', type: 'success'});
-		}
-	});
-});
-//this gets all posts and returns them
-server.get('/posts', (req, res) =>{
-	const sql = 'SELECT * FROM posts ORDER BY creation_date DESC';
-	db.all(sql, (err, posts) =>{
-		if(err){
-			console.error(err);
-			res.status(500).json({message: 'Internal server error', type: 'danger'});
-		}else{
-		//should it be an else here?
-			res.status(200).send(posts);
 		}
 	});
 });
@@ -106,6 +105,9 @@ server.delete('/posts/:id', (req, res) =>{
 		}
 	})
 })
+
+
+//initalizes post in the db if there are none.
 server.get('/initposts', (req, res) =>{
 	const sql = 'SELECT * FROM posts';
 	db.all(sql, (err, posts) =>{
@@ -113,11 +115,11 @@ server.get('/initposts', (req, res) =>{
 			console.error(err);
 			res.status(500).send('Server Error');
 		} else if (posts.length > 0){
-			console.log('Det finns redan i inlägg i databasen');
-			res.send('Det finns redan inlägg i databasen');
+			console.log('Posts already exists in the db');
+			res.send('Failure, Posts already exists in the db');
 		}else{
 			initalizeStartPosts();
-			res.send('Inlägg initialiserade.');
+			res.send('Success, post initalized');
 		}
 	});
 });

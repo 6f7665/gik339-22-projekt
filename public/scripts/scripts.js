@@ -69,7 +69,7 @@ function revealForm(isEditing = false, postId = ""){
 
   const formBtns = form.querySelectorAll('.btn');
   
-  // close triggers
+  // close form triggers
   fadeContainer.addEventListener('click', (event) =>{
     if (event.target === fadeContainer){
       closeForm();
@@ -93,7 +93,7 @@ function revealForm(isEditing = false, postId = ""){
   });
 }
 
-
+//btn eventlistener to reveal form when clicking on it.
 createPostBtn.addEventListener('click', () => {
   revealForm();
 });
@@ -151,7 +151,7 @@ function deletePost(id){
   form.reset();
 }
 
-// function to get data from form
+// function to get data from form returns an object with the values of each input field.
 function getFormData(form){
   return{
     blogAuthor: form.elements['blogAuthor'].value,
@@ -171,7 +171,7 @@ function handleResponse(data){
   }
 }
 
-// function to create alerts depending on message
+// function to create alert messages and notify the frontend users of what happened.
 function displayAlert(message, type){
   const alertContainer = document.getElementById('alertContainer');
   const alertClass = type === 'danger' ? 'alert-danger' : 'alert-success';
@@ -188,7 +188,7 @@ function displayAlert(message, type){
 
 }
 
-// fetch and update data from db
+// fetch and update data from db, gets called whenever a chance occurs to update the frontend.
 function fetchData(){
     postContainer.innerHTML = "";
     const url = 'https://localhost:8080/posts';
@@ -214,12 +214,11 @@ function fetchData(){
             });
             postContainer.innerHTML += html;
 
-          
+       
         }
 
     });
-   
-
+  
 
 }
  
