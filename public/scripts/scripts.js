@@ -4,6 +4,11 @@ const fadeContainer = document.getElementById('fadeContainer');
 const form = document.getElementById('createPostForm');
 const formHeading = document.getElementById('formHeading');
 
+// function that converts rgb to hexadecimal
+function rgbToHex(rgb) {
+  let [r, g, b] = rgb.match(/\d+/g); // Extract the numerical parts of the rgb string
+  return "#" + ((1 << 24) + (parseInt(r) << 16) + (parseInt(g) << 8) + parseInt(b)).toString(16).slice(1);
+}
 
 //btn listener on all posts
 postContainer.addEventListener('click', (event) => {
@@ -34,9 +39,12 @@ form.addEventListener('submit', (event) => {
 
 //close form modal popup
 function closeForm(){
+  //removes blackscreen fade
   fadeContainer.style.opacity = 0;
   fadeContainer.style.visibility = 'hidden';
+  //removes animation
   form.classList.remove('slide-in-animation');
+  //resets form
   form.reset();
 }
 // form modal slidein
@@ -52,15 +60,14 @@ function revealForm(isEditing = false, postId = ""){
     formHeading.textContent = `Create a new post 🫶🏼🌼🖍️`;
     form.querySelector('.btn-primary').textContent = "Create post";
 }
-  fadeContainer.classList.add('active');
-
+  //blackscreen fade
   fadeContainer.style.opacity = 1;
   fadeContainer.style.visibility = 'visible';
 
+  // css animation that slides in form from the right
   form.classList.add('slide-in-animation');
+
   const formBtns = form.querySelectorAll('.btn');
-
-
   
   // close triggers
   fadeContainer.addEventListener('click', (event) =>{
@@ -109,7 +116,7 @@ function fetchRequest(method, url, body){
 // function to create post
 function createPost(){
   const formData = getFormData(form);
-  fetchRequest('POST', '/createpost', formData)
+  fetchRequest('POST', '/posts', formData)
     .then(data => handleResponse(data));
 }
 
@@ -120,22 +127,25 @@ function setFormData(id){
   const title = post.querySelector('.card-title');
   const author = post.querySelector('.post-author');
   const postText = post.querySelector('.card-text');
+  const color = rgbToHex(title.style.color);
+  console.log(color)
   form.elements['blogHeading'].value = title.textContent;
   form.elements['blogAuthor'].value = author.textContent;
   form.elements['blogContent'].value = postText.textContent;
+  form.elements['blogColor'].value = color;
 
 }
 
 //Update post
 function updatePost(id){
   const formData = getFormData(form);
-  fetchRequest('PUT', `/updatepost/${id}`, formData)
+  fetchRequest('PUT', `posts/${id}`, formData)
     .then(data => handleResponse(data));
   
 }
 // delete post
 function deletePost(id){
-  fetchRequest('DELETE', `/deletepost/${id}`, body = {})
+  fetchRequest('DELETE', `posts/${id}`, body = {})
     .then(data => handleResponse(data));
 
   form.reset();
@@ -177,7 +187,6 @@ function displayAlert(message, type){
   alertContainer.innerHTML = alertHtml;
 
 }
-
 
 // fetch and update data from db
 function fetchData(){

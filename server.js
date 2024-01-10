@@ -9,7 +9,7 @@ const server = express();
 const port = 8080;
 const db = new sqlite3.Database('blog.db');
 
-//Our own imported package to initalize some posts into the database.
+// Our own impotred function to initalize db table and a few rows.
 const initalizeStartPosts = require('./initDB.js');
 
 //settings
@@ -17,7 +17,7 @@ const Settings = {
 	sslKey: "ssl/privkey.pem",
 	sslCert: "ssl/certificate.pem",
 }
-
+// Middleware, parse json, static to serve static files, urlencoded to get req.body, headers to allow access
 server
   .use(express.json())
   .use(express.static('public'))
@@ -33,8 +33,7 @@ server.get('/', (req, res) => {
 	res.sendFile(path.join(__dirname, './index.html'));
 	
 });
-server.post('/createpost', (req, res) =>{
-	// Ladda upp bild till servern
+server.post('/posts', (req, res) =>{
 
 	//Skapa ett blogginlägg.
 	const author = req.body.blogAuthor;
@@ -68,7 +67,7 @@ server.get('/posts', (req, res) =>{
 	});
 });
 //this updates posts based on id
-server.put('/updatepost/:id', (req, res) =>{
+server.put('/posts/:id', (req, res) =>{
 	const postId = req.params.id;
 	console.log("update:" + postId);
 
@@ -93,7 +92,7 @@ server.put('/updatepost/:id', (req, res) =>{
 	});
 });
 //this deletes post based on id
-server.delete('/deletepost/:id', (req, res) =>{
+server.delete('/posts/:id', (req, res) =>{
 	const postId = req.params.id;
 
 	const sql = 'DELETE FROM posts WHERE id= ?';
